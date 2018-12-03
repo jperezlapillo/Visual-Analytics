@@ -107,12 +107,10 @@ hexgrid_blocks <- merge(hexgrid_blocks, blocks_in_hex@data, by = "ID")
 
 # the data is too big for Github, so I stored the data in Amazon Web Services's
 # S3 bucket. Below is the credentials and code for accesing it.
-Sys.setenv(AWS_ACCESS_KEY_ID = "",
-           AWS_SECRET_ACCESS_KEY = "",
-           AWS_DEFAULT_REGION = "eu-west-2")
 
-padron <- s3readRDS("padron_resultados_elecciones_rm.rds", 
-                    bucket = "voter.register")
+padron <- s3readRDS("padron_resultados_elecciones_rm.rds", bucket = "voter.register",
+                     key = "", secret = "", region = "eu-west-2")
+
 
 # padron <- readRDS("./data/padron_resultados_elecciones_rm.rds") 
 
@@ -156,6 +154,11 @@ voters_by_hex <- voters_by_hex %>% group_by(ID) %>%
 
 hex_voters <- merge(hex_grid, voters_by_hex, by = "ID")
 
+# Difference betweeen right and left
+hexGrid$diff_1 <- hexGrid$right_perc_1 - hexGrid$left_perc_1
+hexGrid$diff_2 <- hexGrid$right_perc_2 - hexGrid$left_perc_2
+
+
 ## Final dataset ----------------------------------------------------------
 hexGrid <- merge(hexgrid_blocks, hex_voters@data, by = "ID")
 hexGrid <- hexGrid[!is.na(hexGrid$right_perc_2), ]
@@ -163,6 +166,8 @@ hexGrid <- hexGrid[!is.na(hexGrid$right_perc_2), ]
 rm(blocks_in_hex, freq_to_mean, hex_grid, hex_voters, 
    hexgrid_blocks, manzanas_x_hex, prop_freqs, shp_rm, 
    voters_by_hex, voters_in_hex, vars)
+
+
 
 # Save file if it doesn´t exist already
 if(!(file.exists("./data/hexGrid.rds"))){
