@@ -168,7 +168,6 @@ rm(blocks_in_hex, freq_to_mean, hex_grid, hex_voters,
    voters_by_hex, voters_in_hex, vars)
 
 
-
 # Save file if it doesn´t exist already
 if(!(file.exists("./data/hexGrid.rds"))){
     saveRDS(hexGrid, "./data/hexGrid.rds")  
