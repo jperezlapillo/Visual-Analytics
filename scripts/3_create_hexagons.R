@@ -107,7 +107,9 @@ hexgrid_blocks <- merge(hexgrid_blocks, blocks_in_hex@data, by = "ID")
 
 # the data is too big for Github, so I stored the data in Amazon Web Services's
 # S3 bucket. Below is the credentials and code for accesing it.
-
+Sys.setenv(AWS_ACCESS_KEY_ID = "",
+           AWS_SECRET_ACCESS_KEY = "",
+           AWS_DEFAULT_REGION = "eu-west-2")
 
 padron <- s3readRDS("padron_resultados_elecciones_rm.rds", 
                     bucket = "voter.register")
