@@ -83,7 +83,7 @@ prop_freqs <- freq_to_mean %>% mutate_at(.vars = vars(tot_muj:d90a_),
 # Si sumo los porcentajes dan 1!! asumo todo esta bien, yo cacho
 # borrar <- prop_freqs %>% mutate(sumVar = rowSums(.[2:3]))
 # borrar <- prop_freqs %>% mutate(sumVar = rowSums(.[4:13]))
-# summary((borrar$sumVar)) 
+# summary((borrar$sumVar))
 
 vars <- c("tot_per", "tot_muj", "tot_hom","d0a7", "d7a17", "d18a29", 
           "d30a39", "d40a49", "d50a59", "d60a69", "d70a79", "d80a89",
@@ -154,14 +154,16 @@ voters_by_hex <- voters_by_hex %>% group_by(ID) %>%
 
 hex_voters <- merge(hex_grid, voters_by_hex, by = "ID")
 
-# Difference betweeen right and left
-hexGrid$diff_1 <- hexGrid$right_perc_1 - hexGrid$left_perc_1
-hexGrid$diff_2 <- hexGrid$right_perc_2 - hexGrid$left_perc_2
-
 
 ## Final dataset ----------------------------------------------------------
 hexGrid <- merge(hexgrid_blocks, hex_voters@data, by = "ID")
 hexGrid <- hexGrid[!is.na(hexGrid$right_perc_2), ]
+
+# Difference betweeen right and left
+hexGrid$diff_1 <- hexGrid$right_perc_1 - hexGrid$left_perc_1
+hexGrid$diff_2 <- hexGrid$right_perc_2 - hexGrid$left_perc_2
+
+hexGrid$swing <- ((hexGrid$right_perc_2 - hexGrid$right_perc_1) - (hexGrid$left_perc_2 - hexGrid$left_perc_1))/2
 
 rm(blocks_in_hex, freq_to_mean, hex_grid, hex_voters, 
    hexgrid_blocks, manzanas_x_hex, prop_freqs, shp_rm, 
@@ -169,7 +171,7 @@ rm(blocks_in_hex, freq_to_mean, hex_grid, hex_voters,
 
 
 # Save file if it doesn´t exist already
-if(!(file.exists("./data/hexGrid.rds"))){
+#if(!(file.exists("./data/hexGrid.rds"))){
     saveRDS(hexGrid, "./data/hexGrid.rds")  
-    print("Saving file")
-}
+#    print("Saving file")
+#}
